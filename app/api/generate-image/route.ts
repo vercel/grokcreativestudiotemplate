@@ -80,7 +80,6 @@ export async function POST(request: Request) {
         : prompt.trim(),
       providerOptions: { xai: { aspect_ratio: ratio } },
     });
-
     let imageUrl: string | undefined;
 
     if (hasDatabase && id) {

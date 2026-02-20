@@ -39,8 +39,9 @@ async function callGenerateVideo(
 
   const xaiUrl = result.providerMetadata?.xai?.videoUrl as string;
 
-  if (generationId && hasBlob) {
-    const saved = await put(`generations/${generationId}.mp4`, Buffer.from(result.video.uint8Array), {
+  if (hasBlob) {
+    const filename = generationId || crypto.randomUUID();
+    const saved = await put(`generations/${filename}.mp4`, Buffer.from(result.video.uint8Array), {
       access: "public",
       contentType: "video/mp4",
       cacheControlMaxAge: 31536000,
@@ -155,7 +156,9 @@ export async function generateVideoWorkflow(
     return { status: "failed", error: message };
   }
 
-  const finalUrl = result.permanentUrl || result.xaiUrl;
+  // Always prefer the blob URL. If blob upload was skipped, proxy the xAI URL
+  // through our server to avoid CORS issues (vidgen.x.ai blocks cross-origin).
+  const finalUrl = result.permanentUrl || `/api/video-proxy?url=${encodeURIComponent(result.xaiUrl)}`;
 
   // Upload to Mux for HLS streaming + auto-thumbnails (optional)
   let muxAssetId: string | null = null;
