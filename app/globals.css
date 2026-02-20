@@ -1,0 +1,131 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* Dark-only app: single token set applied to :root */
+  :root {
+    --background: 0 0% 0%;
+    --foreground: 0 0% 100%;
+    --card: 0 0% 0%;
+    --card-foreground: 0 0% 100%;
+    --popover: 0 0% 0%;
+    --popover-foreground: 0 0% 100%;
+    --primary: 0 0% 100%;
+    --primary-foreground: 0 0% 0%;
+    --secondary: 0 0% 6%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 0 0% 6%;
+    --muted-foreground: 0 0% 55%;
+    --accent: 0 0% 10%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 16%;
+    --input: 0 0% 16%;
+    --ring: 0 0% 100%;
+    --radius: 0px;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  /* Opt-in: allow selection in text inputs, textareas, and elements marked .select-text */
+  input,
+  textarea,
+  [contenteditable="true"],
+  .select-text {
+    -webkit-user-select: text;
+    user-select: text;
+  }
+}
+
+
+
+/* Pixel cursor blink */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.animate-blink {
+  animation: blink 1s step-end infinite;
+}
+
+/* Pixel loading blocks */
+@keyframes pixel-load {
+  0%, 100% { opacity: 0.15; }
+  50% { opacity: 1; }
+}
+
+.animate-pixel-1 { animation: pixel-load 1.6s step-end infinite; }
+.animate-pixel-2 { animation: pixel-load 1.6s step-end 0.2s infinite; }
+.animate-pixel-3 { animation: pixel-load 1.6s step-end 0.4s infinite; }
+
+/* Content reveal: fade in when image/video completes */
+@keyframes content-reveal {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.animate-content-reveal {
+  animation: content-reveal 300ms ease-out forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-content-reveal {
+    animation: none;
+  }
+}
+
+/* content-visibility: skip layout/paint for off-screen feed items */
+.cv-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 500px;
+}
+
+/* Shimmer placeholder for items without blur data or color */
+@keyframes shimmer-placeholder {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.shimmer-bg {
+  background: linear-gradient(90deg, hsl(var(--accent)) 0%, hsl(var(--border)) 50%, hsl(var(--accent)) 100%);
+  background-size: 200% 100%;
+  animation: shimmer-placeholder 1.5s ease-in-out infinite;
+}
+
+/* Scrollbar hide */
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+/* Thin styled scrollbar */
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--border)) transparent;
+}
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+}
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: hsl(var(--border));
+  border-radius: 3px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.4);
+}
