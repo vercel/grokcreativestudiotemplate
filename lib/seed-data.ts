@@ -1,7 +1,7 @@
 import type { ExploreRow } from "@/lib/explore-queries";
 
 /**
- * 30 real generations from the production database.
+ * 23 real generations from the production database.
  * Provides a working explore grid out-of-the-box with no database required.
  */
 export const SEED_GENERATIONS: ExploreRow[] = [
@@ -111,21 +111,6 @@ export const SEED_GENERATIONS: ExploreRow[] = [
     "blur_data": null
   },
   {
-    "id": "ecf4653b-766a-4efb-9388-f2df1b33273b",
-    "user_id": "a8wLiIgtTLckwJGixqXnytT3",
-    "prompt": "Cheetah chasing a gazelle, extreme macro on the paws hitting dirt, claws out, dust exploding, 1000fps slow motion, 8K ultra detailed",
-    "aspect_ratio": "9:16",
-    "image_url": "https://image.mux.com/qTbIsAM2pLqT02597rqJRGSb00vlqgBVuuuerXI9Gre7o/thumbnail.webp?time=0.1&width=1920",
-    "video_url": "https://w1ddfvelthbnqh3k.public.blob.vercel-storage.com/generations/ecf4653b-766a-4efb-9388-f2df1b33273b.mp4",
-    "mux_playback_id": "qTbIsAM2pLqT02597rqJRGSb00vlqgBVuuuerXI9Gre7o",
-    "mode": "video",
-    "created_at": "2026-02-20T19:57:49.798Z",
-    "user_name": "Esteban",
-    "user_avatar": null,
-    "color": null,
-    "blur_data": null
-  },
-  {
     "id": "6604a783-cdc1-4ed3-8707-977d58e550e8",
     "user_id": "a8wLiIgtTLckwJGixqXnytT3",
     "prompt": "Gravity reversed for one second in a busy café: coffee floating from cups, chairs lifting, people grabbing tables, a single cat completely unbothered, 8K ultra detailed, hyperrealistic, humorous",
@@ -186,21 +171,6 @@ export const SEED_GENERATIONS: ExploreRow[] = [
     "blur_data": "data:image/webp;base64,UklGRjAAAABXRUJQVlA4ICQAAABwAQCdASoIAAQAB0CWJagAAuTzAADKJV86vDP/wThGMNeAAAA="
   },
   {
-    "id": "20a7b478-4f88-43f7-be7e-e058aa3fabc9",
-    "user_id": "fFpIgt0jd1Mbp4KT4D6M8ywc",
-    "prompt": "2 frenchies running through a field",
-    "aspect_ratio": "16:9",
-    "image_url": "https://w1ddfvelthbnqh3k.public.blob.vercel-storage.com/generations/20a7b478-4f88-43f7-be7e-e058aa3fabc9.png",
-    "video_url": null,
-    "mux_playback_id": null,
-    "mode": "image",
-    "created_at": "2026-02-20T06:06:49.656Z",
-    "user_name": "jerilynzheng",
-    "user_avatar": null,
-    "color": "#8c8147",
-    "blur_data": "data:image/webp;base64,UklGRjIAAABXRUJQVlA4ICYAAACwAQCdASoIAAQAB0CWJagCdAD0bVroAPJR9aKIaPZkvelllbFAAA=="
-  },
-  {
     "id": "f0a3ca03-f64a-40b5-ac83-a28ec4a3d7b6",
     "user_id": "bF51dYBtWflVCfug3KP83Ml3",
     "prompt": "Cinematic sequence, extreme photorealism, architectural documentary style. The camera looks up at a clear blue sky. From high above the top edge of the frame, massive, brutalist grey concrete block...",
@@ -214,21 +184,6 @@ export const SEED_GENERATIONS: ExploreRow[] = [
     "user_avatar": null,
     "color": "#6b869a",
     "blur_data": "data:image/webp;base64,UklGRiwAAABXRUJQVlA4ICAAAABwAQCdASoIAAQAB0CWJQBOgB4oAADMghPYSv0PXoQAAA=="
-  },
-  {
-    "id": "13103608-5b9b-415d-93ac-d030bc6181b7",
-    "user_id": "bF51dYBtWflVCfug3KP83Ml3",
-    "prompt": "Cinematic sequence, extreme photorealism, architectural documentary style. The camera looks up at a clear blue sky. From high above the top edge of the frame, massive, brutalist grey concrete block...",
-    "aspect_ratio": "16:9",
-    "image_url": "https://image.mux.com/jXfQ02XmxfE8mbuQUuTEgoRwJyUBO8nyPKsOd600nG01HM/thumbnail.webp?time=0.1&width=1920",
-    "video_url": "https://w1ddfvelthbnqh3k.public.blob.vercel-storage.com/generations/13103608-5b9b-415d-93ac-d030bc6181b7.mp4",
-    "mux_playback_id": "jXfQ02XmxfE8mbuQUuTEgoRwJyUBO8nyPKsOd600nG01HM",
-    "mode": "video",
-    "created_at": "2026-02-20T02:25:30.321Z",
-    "user_name": "David Hong",
-    "user_avatar": null,
-    "color": "#737d88",
-    "blur_data": "data:image/webp;base64,UklGRiwAAABXRUJQVlA4ICAAAABwAQCdASoIAAQAB0CWJZQAAuSnwADyPJK7SnDv2YoAAA=="
   },
   {
     "id": "3f796851-cde6-4b13-873a-0a7cf7cd6d63",
@@ -259,36 +214,6 @@ export const SEED_GENERATIONS: ExploreRow[] = [
     "user_avatar": null,
     "color": "#9fa2a1",
     "blur_data": "data:image/webp;base64,UklGRi4AAABXRUJQVlA4ICIAAADQAQCdASoIAAQAB0CWJaQAAxPsRc+kAAD8pF187WTXQAAA"
-  },
-  {
-    "id": "0e1ebdf6-8d8a-4e25-8f93-ac97703282e1",
-    "user_id": "bF51dYBtWflVCfug3KP83Ml3",
-    "prompt": "The blocks don't really look right when they call; they should be stagged; and perhaps form a Pyramid shape.",
-    "aspect_ratio": "16:9",
-    "image_url": "https://image.mux.com/aaTxQMXi81yj9zcYEiTMXyecwTxC4XYAnG2BihYDlg8/thumbnail.webp?time=0.1&width=1920",
-    "video_url": "https://w1ddfvelthbnqh3k.public.blob.vercel-storage.com/generations/0e1ebdf6-8d8a-4e25-8f93-ac97703282e1.mp4",
-    "mux_playback_id": "aaTxQMXi81yj9zcYEiTMXyecwTxC4XYAnG2BihYDlg8",
-    "mode": "video",
-    "created_at": "2026-02-20T02:18:59.625Z",
-    "user_name": "David Hong",
-    "user_avatar": null,
-    "color": "#9c9e9f",
-    "blur_data": "data:image/webp;base64,UklGRioAAABXRUJQVlA4IB4AAACQAQCdASoIAAQAB0CWJZwAAqv1+gAA2/Aq9wpAAAA="
-  },
-  {
-    "id": "114270c8-8c6e-4080-8a1c-1666adf43448",
-    "user_id": "bF51dYBtWflVCfug3KP83Ml3",
-    "prompt": "Concrete blocks falling from sky and forming a foundations for the building blocks that also start falling from the sky one by one. Ultimately resulting in a complete, modern building.",
-    "aspect_ratio": "16:9",
-    "image_url": "https://image.mux.com/I00EDpa7L1YJ43Dw02NebD28rIuviTO6rGWEDk02TTgNsQ/thumbnail.webp?time=0.1&width=1920",
-    "video_url": "https://w1ddfvelthbnqh3k.public.blob.vercel-storage.com/generations/114270c8-8c6e-4080-8a1c-1666adf43448.mp4",
-    "mux_playback_id": "I00EDpa7L1YJ43Dw02NebD28rIuviTO6rGWEDk02TTgNsQ",
-    "mode": "video",
-    "created_at": "2026-02-20T02:17:42.054Z",
-    "user_name": "David Hong",
-    "user_avatar": null,
-    "color": "#a1a4a3",
-    "blur_data": "data:image/webp;base64,UklGRjAAAABXRUJQVlA4ICQAAAAwAQCdASoIAAQAB0CWJZQAA3AA/s/eRiSxFGphw7quf+BAAAA="
   },
   {
     "id": "9c4059bc-ce26-439e-9ce6-fd5ab0d4d201",
@@ -351,21 +276,6 @@ export const SEED_GENERATIONS: ExploreRow[] = [
     "blur_data": "data:image/webp;base64,UklGRi4AAABXRUJQVlA4ICIAAABwAQCdASoIAAQAB0CWJQAAXJ2HEADw2zl1dOR4t6l3rcAA"
   },
   {
-    "id": "e8a8f35d-3a2a-4390-83a6-ecd138dcc34c",
-    "user_id": "zAwAOCtVp9DhpahNo2KB7oWv",
-    "prompt": "a silkie chicken on the chalk cliffs in great britain looking out at the sunset",
-    "aspect_ratio": "16:9",
-    "image_url": "https://w1ddfvelthbnqh3k.public.blob.vercel-storage.com/generations/e8a8f35d-3a2a-4390-83a6-ecd138dcc34c.png",
-    "video_url": null,
-    "mux_playback_id": null,
-    "mode": "image",
-    "created_at": "2026-02-20T00:12:22.210Z",
-    "user_name": "Walter Korman",
-    "user_avatar": null,
-    "color": "#947164",
-    "blur_data": "data:image/webp;base64,UklGRjAAAABXRUJQVlA4ICQAAABwAQCdASoIAAQAB0CWJQBYdh8oQAD1w48F4+ejQvqa52wAAAA="
-  },
-  {
     "id": "a87aa55c-010e-40dc-ade6-30f62d8fa53d",
     "user_id": "fFpIgt0jd1Mbp4KT4D6M8ywc",
     "prompt": "create a dog eating ice cream",
@@ -409,21 +319,6 @@ export const SEED_GENERATIONS: ExploreRow[] = [
     "user_avatar": null,
     "color": "#738463",
     "blur_data": "data:image/webp;base64,UklGRjQAAABXRUJQVlA4ICgAAADQAQCdASoIAAQAB0CWJaAC7AEO137vwAD1w0NJBQyL5yYjDWNSAAAA"
-  },
-  {
-    "id": "f0a25836-22a5-4ebf-9d41-306c700f1a8b",
-    "user_id": "ZCw0eppTVeKYYEpmgKwo62AM",
-    "prompt": "a golfer eating ice cream",
-    "aspect_ratio": "16:9",
-    "image_url": "https://w1ddfvelthbnqh3k.public.blob.vercel-storage.com/generations/f0a25836-22a5-4ebf-9d41-306c700f1a8b.png",
-    "video_url": null,
-    "mux_playback_id": null,
-    "mode": "image",
-    "created_at": "2026-02-19T22:28:08.840Z",
-    "user_name": "Dan Fein",
-    "user_avatar": null,
-    "color": "#6e7042",
-    "blur_data": "data:image/webp;base64,UklGRjgAAABXRUJQVlA4ICwAAACwAQCdASoIAAQAB0CWJbAC7AD0bRugAPoQmZGPqTDSl324RYqIWA3K/E+AAA=="
   },
   {
     "id": "3d319aaa-4aec-4a13-9129-fac6feedab21",
