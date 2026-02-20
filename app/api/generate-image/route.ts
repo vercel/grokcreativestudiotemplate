@@ -73,7 +73,6 @@ export async function POST(request: Request) {
 
     const isEdit = typeof imageBase64 === "string" && imageBase64.length > 0;
 
-    console.log("[v0] Image generation starting", { isEdit, ratio, promptLength: prompt.trim().length });
     const { image } = await experimental_generateImage({
       model: gateway.imageModel("xai/grok-imagine-image"),
       prompt: isEdit
@@ -81,8 +80,6 @@ export async function POST(request: Request) {
         : prompt.trim(),
       providerOptions: { xai: { aspect_ratio: ratio } },
     });
-    console.log("[v0] Image generation completed successfully, base64 length:", image.base64.length);
-
     let imageUrl: string | undefined;
 
     if (hasDatabase && id) {
@@ -106,8 +103,7 @@ export async function POST(request: Request) {
 
     return Response.json({ image: image.base64, aspectRatio: ratio, imageUrl });
   } catch (error) {
-    console.error("[v0] Image generation error:", error);
-    const message = error instanceof Error ? error.message : "Generation failed";
-    return Response.json({ error: message }, { status: 500 });
+    console.error("Image generation error:", error);
+    return Response.json({ error: "Generation failed" }, { status: 500 });
   }
 }
