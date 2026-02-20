@@ -1,7 +1,7 @@
 import type { ExploreRow } from "@/lib/explore-queries";
 
 /**
- * 19 real generations from the production database.
+ * 18 real generations from the production database.
  * Provides a working explore grid out-of-the-box with no database required.
  */
 export const SEED_GENERATIONS: ExploreRow[] = [
@@ -169,21 +169,6 @@ export const SEED_GENERATIONS: ExploreRow[] = [
     "user_avatar": null,
     "color": "#3f444e",
     "blur_data": "data:image/webp;base64,UklGRi4AAABXRUJQVlA4ICIAAACwAQCdASoIAAQAB0CWJZwC7AD0cUAAAP7ZQhQxrauIwBAA"
-  },
-  {
-    "id": "2ee453da-2946-4fc4-af73-0d77f6f83b39",
-    "user_id": "AEIIDYVk59zbFF2SxfyxxmuO",
-    "prompt": "Crop off the checkerboard border",
-    "aspect_ratio": "16:9",
-    "image_url": "https://image.mux.com/HigJ017QPmqk3Zu5fKH00T02FAjFxmMlrRdNUiCaGOBunA/thumbnail.webp?time=0.1&width=1920",
-    "video_url": "https://w1ddfvelthbnqh3k.public.blob.vercel-storage.com/generations/2ee453da-2946-4fc4-af73-0d77f6f83b39.mp4",
-    "mux_playback_id": "HigJ017QPmqk3Zu5fKH00T02FAjFxmMlrRdNUiCaGOBunA",
-    "mode": "video",
-    "created_at": "2026-02-20T00:40:47.933Z",
-    "user_name": "Nathan Rajlich",
-    "user_avatar": null,
-    "color": "#b2b89f",
-    "blur_data": "data:image/webp;base64,UklGRjYAAABXRUJQVlA4ICoAAACwAQCdASoIAAgAB0CWJZAC7ADZgYAAAP5f2oC+Vx24oOP670PiQV4IgAA="
   },
   {
     "id": "bc3db407-9366-47e0-9eb5-8279a5e495c4",
