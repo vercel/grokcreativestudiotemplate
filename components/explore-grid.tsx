@@ -38,6 +38,8 @@ interface ExploreGridProps {
   deleteItemRef?: React.MutableRefObject<((itemId: string) => void) | null>;
   scrollRef?: React.RefObject<HTMLElement | null>;
   knownImages?: Map<string, string>;
+  /** When true, grid videos pause in place instead of detaching (prevents flash when overlay opens/closes) */
+  overlayActive?: boolean;
 }
 
 // ── Grid Loading Priorities ───────────────────────────────────
@@ -248,11 +250,38 @@ const SCROLL_IDLE_MS = 50;
 function useGridVideos(
   observers: SharedObservers,
   scrollRef: React.RefObject<HTMLElement | null> | undefined,
+  overlayActive: boolean,
 ) {
   const hlsMap = useRef(new Map<string, import("hls.js").default | null>());
   const videosRef = useRef(new Map<string, { video: HTMLVideoElement; inZone: boolean }>());
   const scrollingRef = useRef(false);
   const idleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const overlayRef = useRef(overlayActive);
+  overlayRef.current = overlayActive;
+
+  // When overlay opens: pause all videos (keep HLS attached, keep opacity).
+  // When overlay closes: resume visible videos instantly (no re-download).
+  const prevOverlay = useRef(overlayActive);
+  useEffect(() => {
+    if (prevOverlay.current === overlayActive) return;
+    prevOverlay.current = overlayActive;
+    if (overlayActive) {
+      // Pause all — keep frames visible
+      for (const [, entry] of videosRef.current) {
+        entry.video.pause();
+      }
+    } else {
+      // Resume visible videos after a short delay so the overlay has time to unmount
+      const timer = setTimeout(() => {
+        for (const [url, entry] of videosRef.current) {
+          if (entry.inZone && hlsMap.current.has(url)) {
+            entry.video.play().catch(() => {});
+          }
+        }
+      }, 50);
+      return () => clearTimeout(timer);
+    }
+  }, [overlayActive]);
 
   const attachVideo = useCallback((url: string, video: HTMLVideoElement) => {
     if (hlsMap.current.has(url)) return;
@@ -260,6 +289,17 @@ function useGridVideos(
     attachGridHls(video, url).then((hls) => {
       hlsMap.current.set(url, hls);
       const play = () => {
+        // Don't start playback if overlay opened while we were loading
+        if (overlayRef.current) {
+          // Still reveal the first frame so there's no black flash later
+          const reveal = () => { video.style.opacity = "1"; };
+          if ("requestVideoFrameCallback" in video) {
+            (video as any).requestVideoFrameCallback(reveal);
+          } else {
+            requestAnimationFrame(reveal);
+          }
+          return;
+        }
         video.play().then(() => {
           // Wait until the browser has actually painted a video frame before
           // making it visible. requestVideoFrameCallback fires at the exact
@@ -279,6 +319,8 @@ function useGridVideos(
 
   // After scroll stops: detach stale HLS, attach + play visible ones
   const schedulePass = useCallback(() => {
+    // Skip detach/attach cycle while overlay is covering the grid
+    if (overlayRef.current) return;
     for (const [url, entry] of videosRef.current) {
       if (entry.inZone) {
         attachVideo(url, entry.video);
@@ -338,6 +380,10 @@ function useGridVideos(
       if (!entry) return;
       entry.inZone = visible;
 
+      // When overlay is active, ignore intersection changes — the overlay
+      // covering items shouldn't trigger detach/attach cycles.
+      if (overlayRef.current) return;
+
       // During scroll, just track zone state — schedulePass handles the rest.
       // When idle (not scrolling), act immediately.
       if (!scrollingRef.current) {
@@ -351,6 +397,7 @@ function useGridVideos(
 
     // Eagerly start above-fold videos on mount — use rAF to batch layout reads
     requestAnimationFrame(() => {
+      if (overlayRef.current) return;
       const rect = el.getBoundingClientRect();
       if (rect.top < window.innerHeight && rect.bottom > 0 && rect.width > 0) {
         const entry = videosRef.current.get(streamUrl);
@@ -509,6 +556,7 @@ export function ExploreGrid({
   deleteItemRef,
   scrollRef,
   knownImages,
+  overlayActive = false,
 }: ExploreGridProps) {
   // --- State ---
   const [lightbox, setLightbox] = useState<{ src: string; alt: string } | null>(null);
@@ -528,7 +576,7 @@ export function ExploreGrid({
 
   // --- Hooks composition ---
   const observers = useSharedObservers(scrollRef);
-  const registerVideoRef = useGridVideos(observers, scrollRef);
+  const registerVideoRef = useGridVideos(observers, scrollRef, overlayActive);
 
   // --- Feed (infinite scroll) ---
   const getKey = useCallback(
