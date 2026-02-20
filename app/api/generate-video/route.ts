@@ -38,6 +38,7 @@ export async function POST(request: Request) {
       imageUrl = blob.url;
     }
 
+    console.log("[v0] Video generation starting", { ratio, dur, hasVideoUrl: !!videoUrl, hasImageUrl: !!imageUrl, promptLength: prompt.trim().length });
     const run = await start(generateVideoWorkflow, [
       prompt.trim(),
       ratio,
@@ -62,7 +63,8 @@ export async function POST(request: Request) {
 
     return Response.json({ runId: run.runId });
   } catch (error) {
-    console.error("Video generation error:", error);
-    return Response.json({ error: "Generation failed" }, { status: 500 });
+    console.error("[v0] Video generation error:", error);
+    const message = error instanceof Error ? error.message : "Generation failed";
+    return Response.json({ error: message }, { status: 500 });
   }
 }
