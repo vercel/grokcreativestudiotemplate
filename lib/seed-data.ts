@@ -1,40 +1,10 @@
 import type { ExploreRow } from "@/lib/explore-queries";
 
 /**
- * 23 real generations from the production database.
+ * 19 real generations from the production database.
  * Provides a working explore grid out-of-the-box with no database required.
  */
 export const SEED_GENERATIONS: ExploreRow[] = [
-  {
-    "id": "79bdb873-d5f5-400f-b1d4-25e6fc8bd6f7",
-    "user_id": "RTRSbRBZKQAzVxaavee0s5Lg",
-    "prompt": "a landing page",
-    "aspect_ratio": "16:9",
-    "image_url": "https://w1ddfvelthbnqh3k.public.blob.vercel-storage.com/generations/79bdb873-d5f5-400f-b1d4-25e6fc8bd6f7.png",
-    "video_url": null,
-    "mux_playback_id": null,
-    "mode": "image",
-    "created_at": "2026-02-20T22:21:12.307Z",
-    "user_name": "Jonathan Padilla",
-    "user_avatar": null,
-    "color": "#dbe4e9",
-    "blur_data": "data:image/webp;base64,UklGRiYAAABXRUJQVlA4IBoAAAAwAQCdASoIAAQAB0CWJZwAA3AA/u0p8CAAAA=="
-  },
-  {
-    "id": "47185025-6917-460c-a5fd-79c26272ec36",
-    "user_id": "a8wLiIgtTLckwJGixqXnytT3",
-    "prompt": "fuego verde",
-    "aspect_ratio": "16:9",
-    "image_url": "https://w1ddfvelthbnqh3k.public.blob.vercel-storage.com/generations/47185025-6917-460c-a5fd-79c26272ec36.png",
-    "video_url": null,
-    "mux_playback_id": null,
-    "mode": "image",
-    "created_at": "2026-02-20T21:34:36.491Z",
-    "user_name": "Esteban",
-    "user_avatar": null,
-    "color": "#213820",
-    "blur_data": "data:image/webp;base64,UklGRjYAAABXRUJQVlA4ICoAAACwAQCdASoIAAQAB0CWJQBOgCbFNj1gAP7QR9XHUOOoZ9Yvo67t7oQAAAA="
-  },
   {
     "id": "39d78deb-084f-4701-80db-803c5993af65",
     "user_id": "a8wLiIgtTLckwJGixqXnytT3",
@@ -64,21 +34,6 @@ export const SEED_GENERATIONS: ExploreRow[] = [
     "user_avatar": null,
     "color": null,
     "blur_data": null
-  },
-  {
-    "id": "b2b977e0-5ade-4233-80e9-581f79f5e1f9",
-    "user_id": "a8wLiIgtTLckwJGixqXnytT3",
-    "prompt": "make the car red",
-    "aspect_ratio": "16:9",
-    "image_url": "https://w1ddfvelthbnqh3k.public.blob.vercel-storage.com/generations/b2b977e0-5ade-4233-80e9-581f79f5e1f9.png",
-    "video_url": null,
-    "mux_playback_id": null,
-    "mode": "image",
-    "created_at": "2026-02-20T20:19:30.167Z",
-    "user_name": "Esteban",
-    "user_avatar": null,
-    "color": "#3e343f",
-    "blur_data": "data:image/webp;base64,UklGRjIAAABXRUJQVlA4ICYAAACwAQCdASoIAAQAB0CWJZwAAqsMGs6AAP66AmK8VD1OwiGAVQoAAA=="
   },
   {
     "id": "2f9f9d8e-b9d2-464e-a875-a3e3f20c951c",
@@ -124,21 +79,6 @@ export const SEED_GENERATIONS: ExploreRow[] = [
     "user_avatar": null,
     "color": null,
     "blur_data": null
-  },
-  {
-    "id": "c15e9cd3-7627-430b-b555-ec3e79276f25",
-    "user_id": "a8wLiIgtTLckwJGixqXnytT3",
-    "prompt": "red background",
-    "aspect_ratio": "16:9",
-    "image_url": "https://w1ddfvelthbnqh3k.public.blob.vercel-storage.com/generations/c15e9cd3-7627-430b-b555-ec3e79276f25.png",
-    "video_url": null,
-    "mux_playback_id": null,
-    "mode": "image",
-    "created_at": "2026-02-20T14:34:33.567Z",
-    "user_name": "Esteban",
-    "user_avatar": null,
-    "color": "#a41318",
-    "blur_data": "data:image/webp;base64,UklGRjYAAABXRUJQVlA4ICoAAACwAQCdASoIAAQAB0CWJbACdAD0bRugAP7Z8e542WkQg/xQ81uxLeTgAAA="
   },
   {
     "id": "3d547a5d-98fe-4413-8645-0defa94b1fe8",
