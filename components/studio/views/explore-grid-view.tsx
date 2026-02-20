@@ -71,6 +71,7 @@ export function ExploreGridView({
       deleteItemRef={exploreDeleteRef}
       onSelectImage={handleSelectImage}
       knownImages={knownImages}
+      overlayActive={!!exploreSelection}
     />
   );
 }
