@@ -1,12 +1,15 @@
 "use client";
 
 import { useEffect, useCallback } from "react";
-import { optimizedUrl } from "@/lib/image-url";
 
 interface LightboxProps {
   src: string;
   alt: string;
   onClose: () => void;
+}
+
+function optimizedUrl(src: string, w = 1200, q = 75) {
+  return `/_next/image?url=${encodeURIComponent(src)}&w=${w}&q=${q}`;
 }
 
 export function Lightbox({ src, alt, onClose }: LightboxProps) {

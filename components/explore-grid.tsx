@@ -100,8 +100,12 @@ interface ExploreGridProps {
 
 
 interface SharedObservers {
+  registerLoad(el: Element, cb: () => void): void;
+  unregisterLoad(el: Element): void;
   registerVis(el: Element, cb: (visible: boolean) => void): void;
   unregisterVis(el: Element): void;
+  /** Re-observe all vis elements to trigger fresh intersection callbacks */
+  reobserve(): void;
 }
 
 const ASPECT_HEIGHT_MAP: Record<string, number> = Object.fromEntries(
@@ -203,22 +207,41 @@ function useColumnCount() {
 
 
 function useSharedObservers(scrollRef: React.RefObject<HTMLElement | null> | undefined): SharedObservers {
+  const loadCallbacks = useRef(new Map<Element, () => void>());
   const visCallbacks = useRef(new Map<Element, (visible: boolean) => void>());
+  const loadObsRef = useRef<IntersectionObserver | null>(null);
   const visObsRef = useRef<IntersectionObserver | null>(null);
 
   useEffect(() => {
     const root = scrollRef?.current ?? null;
+    loadObsRef.current = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            const cb = loadCallbacks.current.get(e.target);
+            if (cb) { cb(); loadCallbacks.current.delete(e.target); loadObsRef.current?.unobserve(e.target); }
+          }
+        }
+      },
+      { root, rootMargin: "200px" },
+    );
     visObsRef.current = new IntersectionObserver(
       (entries) => { for (const e of entries) { const cb = visCallbacks.current.get(e.target); if (cb) cb(e.isIntersecting); } },
       { root, rootMargin: "400px" },
     );
+    for (const el of loadCallbacks.current.keys()) loadObsRef.current.observe(el);
     for (const el of visCallbacks.current.keys()) visObsRef.current.observe(el);
-    return () => { visObsRef.current?.disconnect(); };
+    return () => { loadObsRef.current?.disconnect(); visObsRef.current?.disconnect(); };
   }, [scrollRef]);
 
   return useMemo<SharedObservers>(() => ({
+    registerLoad(el, cb) { loadCallbacks.current.set(el, cb); loadObsRef.current?.observe(el); },
+    unregisterLoad(el) { loadCallbacks.current.delete(el); loadObsRef.current?.unobserve(el); },
     registerVis(el, cb) { visCallbacks.current.set(el, cb); visObsRef.current?.observe(el); },
     unregisterVis(el) { visCallbacks.current.delete(el); visObsRef.current?.unobserve(el); },
+    reobserve() {
+      for (const el of visCallbacks.current.keys()) { visObsRef.current?.unobserve(el); visObsRef.current?.observe(el); }
+    },
   }), []);
 }
 
