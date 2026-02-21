@@ -5,7 +5,6 @@ import { isValidRatio, MAX_PROMPT_LENGTH } from "@/lib/constants";
 import { detectMimeFromBase64 } from "@/lib/utils";
 import { hasDatabase, sql } from "@/lib/db";
 import { hasMixedbread, uploadImageToStore } from "@/lib/mixedbread-store";
-import { warmViewportImages } from "@/lib/warm-image-cache";
 
 const hasBlob = !!process.env.BLOB_READ_WRITE_TOKEN;
 
@@ -38,11 +37,6 @@ async function persistImage(
       } catch (e) {
         console.error("[store] Upload error:", e);
       }
-    }
-    try {
-      await warmViewportImages([{ image_url: imageUrl }]);
-    } catch (e) {
-      console.error("[warm] CDN warm error:", e);
     }
   });
   return imageUrl;

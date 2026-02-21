@@ -1,13 +1,12 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
-import { after, connection } from "next/server";
+import { connection } from "next/server";
 import { getExploreManifest, getSearchResults } from "@/lib/explore-queries";
 import { StudioProvider } from "@/components/studio/studio-context";
 import { LayoutProvider } from "@/components/studio/layout-context";
 import { StudioShell } from "@/components/studio/studio-shell";
 import { DataInjector } from "@/components/studio/data-injector";
 import { preloadFromCompact } from "@/lib/preload-images";
-import { warmFromCompact } from "@/lib/warm-image-cache";
 
 export const metadata: Metadata = {
   title: "Explore — Grok Creative Studio",
@@ -21,7 +20,6 @@ export default async function ExplorePage_({
 }) {
   const manifest = await getExploreManifest();
   preloadFromCompact(manifest.items);
-  after(() => warmFromCompact(manifest.items));
 
   return (
     <StudioProvider

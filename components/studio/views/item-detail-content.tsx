@@ -3,10 +3,7 @@
 import { useCallback, useState } from "react";
 import { PixelVideoPlayer } from "@/components/pixel-video-player";
 import { muxStreamUrl, muxThumbnailUrl } from "@/lib/hls";
-
-function optimizedUrl(src: string, w = 1200, q = 75) {
-  return `/_next/image?url=${encodeURIComponent(src)}&w=${w}&q=${q}`;
-}
+import { optimizedUrl } from "@/lib/image-url";
 
 // Match the grid's next/image width selection so we can show the
 // already-cached grid image as an instant blurry placeholder (mobile).
