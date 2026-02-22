@@ -8,7 +8,7 @@ import dynamic from "next/dynamic";
 
 import { ASPECT_RATIO_CSS, ASPECT_RATIO_FACTOR } from "@/lib/constants";
 import type { ExploreRow, ExplorePage, SearchResult } from "@/lib/explore-queries";
-import { muxGridStreamUrl, muxThumbnailUrl, attachGridHls, detachHls, preloadHls } from "@/lib/hls";
+import { muxGridStreamUrl, muxStreamUrl, muxThumbnailUrl, attachGridHls, detachHls, preloadHls } from "@/lib/hls";
 
 // ============================================================
 // Section 1: Types & Constants
@@ -400,6 +400,7 @@ function useGridVideos(
       if (overlayRef.current) return;
       const rect = el.getBoundingClientRect();
       if (rect.top < window.innerHeight && rect.bottom > 0 && rect.width > 0) {
+        preloadHls();
         const entry = videosRef.current.get(streamUrl);
         if (entry) {
           entry.inZone = true;
@@ -845,7 +846,10 @@ export function ExploreGrid({
                           }}
                           onMouseEnter={() => {
                             if (isVideo) {
-                              if (item.mux_playback_id) preloadHls();
+                              if (item.mux_playback_id) {
+                                preloadHls();
+                                fetch(muxStreamUrl(item.mux_playback_id)).catch(() => {});
+                              }
                             } else if (posterSrc) {
                               const w = getGridImageWidth();
                               prefetchAndDecode(nextImageUrl(posterSrc, w, isAboveFold ? 75 : 60));
