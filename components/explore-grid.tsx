@@ -9,6 +9,7 @@ import dynamic from "next/dynamic";
 import { ASPECT_RATIO_CSS, ASPECT_RATIO_FACTOR } from "@/lib/constants";
 import type { ExploreRow, ExplorePage, SearchResult } from "@/lib/explore-queries";
 import { muxGridStreamUrl, muxStreamUrl, muxThumbnailUrl, attachGridHls, detachHls, preloadHls } from "@/lib/hls";
+import { getGridImageWidth, nextImageUrl } from "@/lib/image-url";
 
 // ============================================================
 // Section 1: Types & Constants
@@ -78,13 +79,13 @@ interface ExploreGridProps {
 // P3  Detail/lightbox gets ALL bandwidth
 //     The moment the detail opens, pause every grid video download.
 //     Warm videos freeze on their last frame — no flicker, no re-download.
-//     When the detail closes, wait 150ms before resuming grid videos.
+//     When the detail closes, wait 50ms before resuming grid videos.
 //     If the user clicks another image within that window, the resume
 //     is cancelled. Zero wasted work.
 //
 // P4  Scrolling doesn't waste bandwidth
 //     While scrolling: abort downloads for videos that leave the viewport.
-//     Don't start anything new — wait for scroll to stop (150ms idle).
+//     Don't start anything new — wait for scroll to stop (50ms idle).
 //     After idle: snapshot the viewport, cancel everything outside it,
 //     download what's visible (top-to-bottom order).
 //     Already-watched videos stay warm (keep src, keep decoded frames).
@@ -93,7 +94,7 @@ interface ExploreGridProps {
 // P5  No visual glitches
 //     Warm videos: show frozen last frame (opacity 1). Resume is instant.
 //     Cold videos: poster image is always visible underneath.
-//     LRU eviction caps warm videos at 12 to bound GPU memory.
+//     Viewport-based eviction (400px IO margin) naturally bounds active count.
 //     No opacity-0 flashes on any state transition.
 //
 // ──────────────────────────────────────────────────────────────
@@ -114,12 +115,6 @@ const ASPECT_HEIGHT_MAP: Record<string, number> = Object.fromEntries(
 
 const PLACEHOLDER_RATIOS = ["3/4", "1/1", "4/3", "9/16", "1/1", "3/4"] as const;
 
-// Pre-compute the /_next/image optimized URL that the browser will actually request.
-// Matches what next/image generates so browser cache is shared.
-function nextImageUrl(src: string, w: number, q: number) {
-  return `/_next/image?url=${encodeURIComponent(src)}&w=${w}&q=${q}`;
-}
-
 /** Prefetch + decode an image into the GPU bitmap cache.
  *  Returns a promise that resolves when the image is fully decoded. */
 function prefetchAndDecode(src: string): Promise<void> {
@@ -138,23 +133,6 @@ const PRELOAD_QUALITY = 75;
 // so the SSR <img srcset> picks the same URL the <link rel="preload"> fetched.
 const SSR_WIDTHS = [128, 256, 384, 640, 750, 828, 1080, 1200, 1920];
 const SSR_SIZES = "(min-width: 1024px) 20vw, (min-width: 640px) 33vw, 50vw";
-
-// Lazily computed optimal image width for the grid tile size + device DPR.
-// Shared across hooks and render so prefetched URLs match what <Image> requests.
-const IMAGE_WIDTHS = [16, 32, 48, 64, 96, 128, 256, 384, 640, 750, 828, 1080, 1200, 1920, 2048, 3840];
-let _gridImgWidth = 0;
-if (typeof window !== "undefined") {
-  window.addEventListener("resize", () => { _gridImgWidth = 0; });
-}
-function getGridImageWidth(): number {
-  if (_gridImgWidth > 0) return _gridImgWidth;
-  if (typeof window === "undefined") return 640;
-  const vw = window.innerWidth >= 1024 ? window.innerWidth * 0.2 : window.innerWidth * 0.33;
-  const dpr = window.devicePixelRatio || 1;
-  const target = Math.ceil(vw * dpr);
-  _gridImgWidth = IMAGE_WIDTHS.find((s) => s >= target) || 640;
-  return _gridImgWidth;
-}
 
 
 // ============================================================

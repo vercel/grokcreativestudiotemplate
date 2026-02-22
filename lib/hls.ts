@@ -59,6 +59,20 @@ function attachWithRetry(video: HTMLVideoElement, src: string, maxRetries = 5, d
   return () => video.removeEventListener("error", onError);
 }
 
+/** On fatal error: recover media errors, fall back to raw src for others. */
+function addErrorHandler(hls: InstanceType<typeof import("hls.js").default>, video: HTMLVideoElement, src: string) {
+  const Hls = HlsModule!;
+  hls.on(Hls.Events.ERROR, (_e, data) => {
+    if (!data.fatal) return;
+    if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
+      hls.recoverMediaError();
+    } else {
+      hls.destroy();
+      video.src = src;
+    }
+  });
+}
+
 /** Attach HLS.js for the detail player. Locked to 720p on all browsers.
  *  Safari compositing artifacts prevented by requestVideoFrameCallback
  *  in the player component. Non-HLS URLs (MP4) bypass HLS entirely. */
@@ -82,15 +96,7 @@ export async function attachHls(video: HTMLVideoElement, src: string): Promise<i
     hls.on(Hls.Events.MANIFEST_PARSED, (_e, data) => {
       hls.currentLevel = data.levels.length - 1;
     });
-    hls.on(Hls.Events.ERROR, (_e, data) => {
-      if (!data.fatal) return;
-      if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
-        hls.recoverMediaError();
-      } else {
-        hls.destroy();
-        video.src = src;
-      }
-    });
+    addErrorHandler(hls, video, src);
     hls.loadSource(src);
     hls.attachMedia(video);
     return hls;
@@ -114,15 +120,7 @@ export async function attachGridHls(video: HTMLVideoElement, src: string): Promi
       maxBufferLength: 6,
       capLevelToPlayerSize: true,
     });
-    hls.on(Hls.Events.ERROR, (_e, data) => {
-      if (!data.fatal) return;
-      if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
-        hls.recoverMediaError();
-      } else {
-        hls.destroy();
-        video.src = src;
-      }
-    });
+    addErrorHandler(hls, video, src);
     hls.loadSource(src);
     hls.attachMedia(video);
     return hls;

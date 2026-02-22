@@ -3,22 +3,7 @@
 import { useCallback, useState } from "react";
 import { PixelVideoPlayer } from "@/components/pixel-video-player";
 import { muxStreamUrl, muxThumbnailUrl } from "@/lib/hls";
-
-function optimizedUrl(src: string, w = 1200, q = 75) {
-  return `/_next/image?url=${encodeURIComponent(src)}&w=${w}&q=${q}`;
-}
-
-// Match the grid's next/image width selection so we can show the
-// already-cached grid image as an instant blurry placeholder (mobile).
-const IMAGE_WIDTHS = [16, 32, 48, 64, 96, 128, 256, 384, 640, 750, 828, 1080, 1200, 1920, 2048, 3840];
-function gridImageUrl(src: string): string {
-  const vw = window.innerWidth >= 1024 ? window.innerWidth * 0.2
-           : window.innerWidth >= 640 ? window.innerWidth * 0.33
-           : window.innerWidth * 0.5;
-  const dpr = window.devicePixelRatio || 1;
-  const w = IMAGE_WIDTHS.find(s => s >= Math.ceil(vw * dpr)) || 640;
-  return `/_next/image?url=${encodeURIComponent(src)}&w=${w}&q=60`;
-}
+import { getGridImageWidth, nextImageUrl } from "@/lib/image-url";
 
 export interface ItemDetailContentProps {
   item: {
@@ -54,9 +39,9 @@ export function ItemDetailContent({
   const [controlsTarget, setControlsTarget] = useState<HTMLDivElement | null>(null);
   const controlsCallbackRef = useCallback((node: HTMLDivElement | null) => setControlsTarget(node), []);
 
-  const displaySrc = item.isVideo ? item.src : optimizedUrl(item.src);
+  const displaySrc = item.isVideo ? item.src : nextImageUrl(item.src, 1200, 75);
   // Grid-size image URL — matches what the grid loaded, should be in browser cache
-  const gridSrc = item.isVideo ? undefined : gridImageUrl(item.src);
+  const gridSrc = item.isVideo ? undefined : nextImageUrl(item.src, getGridImageWidth(), 60);
 
   const bgColor = item.color || "hsl(var(--muted))";
 

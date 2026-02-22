@@ -102,7 +102,8 @@ export function PixelVideoPlayer({
   // Fetch storyboard data for seek preview
   useEffect(() => {
     if (!muxPlaybackId) return;
-    fetch(muxStoryboardUrl(muxPlaybackId))
+    const controller = new AbortController();
+    fetch(muxStoryboardUrl(muxPlaybackId), { signal: controller.signal })
       .then((r) => r.json())
       .then((data: StoryboardData) => {
         storyboardRef.current = data;
@@ -111,6 +112,7 @@ export function PixelVideoPlayer({
         img.src = data.url;
       })
       .catch(() => {});
+    return () => controller.abort();
   }, [muxPlaybackId]);
   const durationRef = useRef(0);
 
