@@ -2,7 +2,7 @@
 
 import { useCallback, useState } from "react";
 import { PixelVideoPlayer } from "@/components/pixel-video-player";
-import { muxStreamUrl, muxThumbnailUrl } from "@/lib/hls";
+import { muxStreamUrl } from "@/lib/hls";
 import { getGridImageWidth, nextImageUrl } from "@/lib/image-url";
 
 export interface ItemDetailContentProps {
@@ -40,10 +40,8 @@ export function ItemDetailContent({
   const controlsCallbackRef = useCallback((node: HTMLDivElement | null) => setControlsTarget(node), []);
 
   const displaySrc = item.isVideo ? item.src : nextImageUrl(item.src, 1200, 75);
-  // Grid-size image URL — matches what the grid loaded, should be in browser cache
-  const gridSrc = item.isVideo ? undefined : nextImageUrl(item.src, getGridImageWidth(), 60);
-
-  const bgColor = item.color || "hsl(var(--muted))";
+  // Grid-size image URL — matches what the grid loaded (same width + quality), browser cache hit
+  const gridSrc = item.isVideo ? undefined : nextImageUrl(item.src, getGridImageWidth(), 75);
 
   return (
     <div className="flex h-full flex-col bg-background/95">
@@ -73,9 +71,8 @@ export function ItemDetailContent({
           <PixelVideoPlayer
             key={item.id}
             src={item.muxPlaybackId ? muxStreamUrl(item.muxPlaybackId) : item.src}
-            poster={item.muxPlaybackId ? muxThumbnailUrl(item.muxPlaybackId) : item.poster}
+            poster={item.poster}
             muxPlaybackId={item.muxPlaybackId ?? undefined}
-            bgColor={bgColor}
             controlsBelow
             controlsPortalTarget={controlsTarget}
             onClick={(e) => e.stopPropagation()}
@@ -93,15 +90,12 @@ export function ItemDetailContent({
           >
             <div
               className="absolute inset-0 rounded"
-              style={{
-                backgroundColor: bgColor,
-                ...(gridSrc ? {
-                  backgroundImage: `url(${gridSrc})`,
-                  backgroundSize: "contain",
-                  backgroundPosition: "center",
-                  backgroundRepeat: "no-repeat",
-                } : {}),
-              }}
+              style={gridSrc ? {
+                backgroundImage: `url(${gridSrc})`,
+                backgroundSize: "contain",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+              } : undefined}
             />
             <img
               key={item.id}

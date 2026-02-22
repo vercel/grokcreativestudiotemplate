@@ -695,7 +695,7 @@ export function ExploreGrid({
     for (let i = 0; i < Math.min(ABOVE_FOLD, serverItems.length); i++) {
       const item = serverItems[i];
       if (item.image_url) {
-        prefetchAndDecode(nextImageUrl(item.image_url, w, i < 10 ? 75 : 60));
+        prefetchAndDecode(nextImageUrl(item.image_url, w, 75));
       }
     }
   }, [serverItems]);
@@ -830,7 +830,7 @@ export function ExploreGrid({
                               }
                             } else if (posterSrc) {
                               const w = getGridImageWidth();
-                              prefetchAndDecode(nextImageUrl(posterSrc, w, isAboveFold ? 75 : 60));
+                              prefetchAndDecode(nextImageUrl(posterSrc, w, 75));
                               prefetchAndDecode(nextImageUrl(posterSrc, 1200, 75));
                             }
                           }}
@@ -868,7 +868,7 @@ export function ExploreGrid({
                                 alt={item.prompt}
                                 fill
                                 sizes="(min-width: 1024px) 20vw, (min-width: 640px) 33vw, 50vw"
-                                quality={isAboveFold ? 75 : 60}
+                                quality={75}
                                 loading={isAboveFold ? "eager" : "lazy"}
                                 priority={globalIdx < 5}
                                 {...(globalIdx < 5 ? { fetchPriority: "high" as const } : {})}
