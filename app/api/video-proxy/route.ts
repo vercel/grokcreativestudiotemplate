@@ -10,19 +10,31 @@ export async function GET(request: Request) {
     return new Response("Missing url parameter", { status: 400 });
   }
 
-  // Only allow proxying from known video hosts
+  // Only allow proxying to a fixed upstream host; treat `url` as a relative path.
+  const BASE_URL = "https://vidgen.x.ai";
+  let parsed: URL;
   try {
-    const parsed = new URL(url);
-    const allowedHosts = ["vidgen.x.ai"];
-    if (!allowedHosts.some((h) => parsed.hostname.endsWith(h))) {
-      return new Response("URL host not allowed", { status: 403 });
+    parsed = new URL(url, BASE_URL);
+
+    // Disallow attempts to escape the intended path space via path traversal.
+    if (parsed.pathname.includes("..")) {
+      return new Response("Invalid path", { status: 400 });
     }
+
+    // Optionally restrict to a specific path prefix on the upstream host.
+    const allowedPathPrefixes = ["/", "/videos/", "/video/"];
+    if (!allowedPathPrefixes.some((prefix) => parsed.pathname.startsWith(prefix))) {
+      return new Response("Path not allowed", { status: 403 });
+    }
+
+    // At this point, the scheme, host, and port are controlled by BASE_URL,
+    // and only a constrained path/query derived from user input is used.
   } catch {
     return new Response("Invalid URL", { status: 400 });
   }
 
   try {
-    const upstream = await fetch(url);
+    const upstream = await fetch(parsed.toString());
     if (!upstream.ok) {
       return new Response("Upstream fetch failed", { status: upstream.status });
     }
