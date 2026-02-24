@@ -441,7 +441,7 @@ export function PixelVideoPlayer({
               loading="eager"
               fetchPriority="high"
               className={`object-contain ${controlsBelow ? "h-full w-full min-h-0" : "max-w-full max-h-full"}`}
-              style={{ pointerEvents: "none", ...(bgColor ? { backgroundColor: bgColor } : {}) }}
+              style={{ pointerEvents: "none", ...(controlsBelow ? {} : bgColor ? { backgroundColor: bgColor } : {}) }}
             />
           )}
           <video
