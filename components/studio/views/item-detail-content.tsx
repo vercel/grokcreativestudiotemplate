@@ -94,7 +94,7 @@ export function ItemDetailContent({
             controlsBelow
             controlsPortalTarget={controlsTarget}
             onClick={(e) => e.stopPropagation()}
-            className="max-h-[calc(100dvh-16rem)] md:max-h-[calc(100dvh-10rem)] max-w-full"
+            className="h-full w-full max-h-[calc(100dvh-12rem)] md:max-h-[calc(100dvh-8rem)] max-w-full"
           />
         ) : (
           <button
@@ -122,7 +122,7 @@ export function ItemDetailContent({
               key={item.id}
               src={displaySrc}
               alt={item.alt}
-              className="max-h-[calc(100dvh-16rem)] md:max-h-[calc(100dvh-10rem)] max-w-full object-contain"
+              className="max-h-[calc(100dvh-12rem)] md:max-h-[calc(100dvh-8rem)] max-w-full object-contain"
             />
           </button>
         )}
