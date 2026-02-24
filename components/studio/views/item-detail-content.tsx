@@ -44,7 +44,7 @@ export function ItemDetailContent({
   const gridSrc = item.isVideo ? undefined : nextImageUrl(item.src, getGridImageWidth(), 75);
 
   return (
-    <div className="flex h-full flex-col bg-background/95">
+    <div className="flex h-full flex-col bg-background/80 backdrop-blur-sm" onClick={onClose}>
       {showMobileBack && (
         <div className="flex shrink-0 items-center px-3 py-2 md:hidden">
           <button
@@ -60,13 +60,7 @@ export function ItemDetailContent({
           </button>
         </div>
       )}
-      <div
-        role="button"
-        tabIndex={0}
-        className="flex min-h-0 flex-1 cursor-pointer items-center justify-center p-4 md:p-8"
-        onClick={onClose}
-        onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") onClose(); }}
-      >
+      <div className="flex min-h-0 flex-1 items-center justify-center p-4 md:p-8">
         {item.isVideo ? (
           <PixelVideoPlayer
             key={item.id}
@@ -75,8 +69,7 @@ export function ItemDetailContent({
             muxPlaybackId={item.muxPlaybackId ?? undefined}
             controlsBelow
             controlsPortalTarget={controlsTarget}
-            onClick={(e) => e.stopPropagation()}
-            className="max-h-[calc(100dvh-16rem)] md:max-h-[calc(100dvh-10rem)] max-w-full"
+            className="h-full w-full max-h-[calc(100dvh-12rem)] md:max-h-[calc(100dvh-8rem)] max-w-full"
           />
         ) : (
           <button
@@ -101,13 +94,13 @@ export function ItemDetailContent({
               key={item.id}
               src={displaySrc}
               alt={item.alt}
-              className="max-h-[calc(100dvh-16rem)] md:max-h-[calc(100dvh-10rem)] max-w-full object-contain"
+              className="max-h-[calc(100dvh-12rem)] md:max-h-[calc(100dvh-8rem)] max-w-full object-contain"
             />
           </button>
         )}
       </div>
-      {item.isVideo && <div ref={controlsCallbackRef} className="shrink-0 px-3 pt-1" />}
-      <div className="shrink-0 border-t border-border px-3 py-2">
+      {item.isVideo && <div ref={controlsCallbackRef} className="shrink-0 px-3 pt-1" onClick={(e) => e.stopPropagation()} />}
+      <div className="shrink-0 border-t border-border px-3 py-2" onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-between gap-2">
           <p className="min-w-0 truncate font-pixel text-[10px] lowercase text-muted-foreground select-text">
             {item.alt}

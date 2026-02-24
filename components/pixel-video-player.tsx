@@ -432,18 +432,19 @@ export function PixelVideoPlayer({
       onMouseMove={controlsBelow ? undefined : revealControls}
       onMouseLeave={controlsBelow ? undefined : handleMouseLeave}
       onTouchStart={controlsBelow ? undefined : revealControls}
-      onClick={onClick}
+      onClick={controlsBelow ? undefined : onClick}
     >
       <div className={controlsBelow ? "min-h-0 flex-1 flex items-center justify-center" : ""}>
-        <div className="relative max-w-full">
+        <div className={`relative ${controlsBelow ? "h-full w-full flex items-center justify-center" : "max-w-full"}`}>
           {poster && (
             <img
               src={poster}
               alt=""
               loading="eager"
               fetchPriority="high"
-              className={`max-w-full object-contain ${controlsBelow ? "min-h-0 max-h-[calc(100dvh-16rem)] md:max-h-[calc(100dvh-10rem)]" : "max-h-full"}`}
-              style={{ pointerEvents: "none", ...(bgColor ? { backgroundColor: bgColor } : {}) }}
+              className={`object-contain ${controlsBelow ? "h-full w-full min-h-0" : "max-w-full max-h-full"}`}
+              onClick={(e) => e.stopPropagation()}
+              style={{ ...(controlsBelow ? {} : { pointerEvents: "none", ...(bgColor ? { backgroundColor: bgColor } : {}) }) }}
             />
           )}
           <video
@@ -454,7 +455,7 @@ export function PixelVideoPlayer({
             preload="auto"
             poster={poster || undefined}
             onClick={togglePlay}
-            className={`absolute inset-0 z-[1] h-full w-full max-w-full object-contain ${controlsBelow ? "min-h-0" : ""}`}
+            className={`absolute inset-0 z-[1] h-full w-full object-contain ${controlsBelow ? "min-h-0" : ""}`}
           />
         </div>
       </div>
