@@ -430,7 +430,7 @@ export function PixelVideoPlayer({
       onMouseMove={controlsBelow ? undefined : revealControls}
       onMouseLeave={controlsBelow ? undefined : handleMouseLeave}
       onTouchStart={controlsBelow ? undefined : revealControls}
-      onClick={onClick}
+      onClick={controlsBelow ? undefined : onClick}
     >
       <div className={controlsBelow ? "min-h-0 flex-1 flex items-center justify-center" : ""}>
         <div className={`relative ${controlsBelow ? "h-full w-full flex items-center justify-center" : "max-w-full"}`}>
@@ -441,7 +441,8 @@ export function PixelVideoPlayer({
               loading="eager"
               fetchPriority="high"
               className={`object-contain ${controlsBelow ? "h-full w-full min-h-0" : "max-w-full max-h-full"}`}
-              style={{ pointerEvents: "none", ...(controlsBelow ? {} : bgColor ? { backgroundColor: bgColor } : {}) }}
+              onClick={(e) => e.stopPropagation()}
+              style={{ ...(controlsBelow ? {} : { pointerEvents: "none", ...(bgColor ? { backgroundColor: bgColor } : {}) }) }}
             />
           )}
           <video

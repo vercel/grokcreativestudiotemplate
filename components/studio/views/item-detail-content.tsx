@@ -87,7 +87,6 @@ export function ItemDetailContent({
             bgColor={bgColor}
             controlsBelow
             controlsPortalTarget={controlsTarget}
-            onClick={(e) => e.stopPropagation()}
             className="h-full w-full max-h-[calc(100dvh-12rem)] md:max-h-[calc(100dvh-8rem)] max-w-full"
           />
         ) : (
