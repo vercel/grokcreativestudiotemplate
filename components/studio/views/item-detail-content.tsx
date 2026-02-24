@@ -61,7 +61,7 @@ export function ItemDetailContent({
   const bgColor = item.color || "hsl(var(--muted))";
 
   return (
-    <div className="flex h-full flex-col bg-background/95">
+    <div className="flex h-full flex-col">
       {showMobileBack && (
         <div className="flex shrink-0 items-center px-3 py-2 md:hidden">
           <button
