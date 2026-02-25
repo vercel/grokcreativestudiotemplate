@@ -176,6 +176,79 @@ export async function consumeVideoStream(
   }
 }
 
+/**
+ * Reads a workflow stream of newline-delimited JSON ImageProgress objects.
+ * Updates the corresponding item in state as progress arrives.
+ */
+export async function consumeImageStream(
+  response: Response,
+  itemId: string,
+  setItems: React.Dispatch<React.SetStateAction<GeneratedItem[]>>,
+  onDone?: () => void,
+) {
+  const reader = response.body?.getReader();
+  if (!reader) return;
+
+  const decoder = new TextDecoder();
+  let buffer = "";
+
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split("\n");
+      buffer = lines.pop() || "";
+
+      for (const line of lines) {
+        const trimmed = line.trim();
+        if (!trimmed) continue;
+
+        let progress: import("@/lib/types").ImageProgress;
+        try {
+          progress = JSON.parse(trimmed);
+        } catch {
+          continue;
+        }
+
+        if (progress.status === "completed" && progress.base64) {
+          // Pre-decode image so it paints instantly when React renders
+          const preloadSrc = progress.imageUrl || `data:image/png;base64,${progress.base64}`;
+          await new Promise<void>((resolve) => {
+            const img = new window.Image();
+            const done = () => { img.onload = null; img.onerror = null; resolve(); };
+            img.onload = done;
+            img.onerror = done;
+            img.src = preloadSrc;
+            setTimeout(done, 3000);
+          });
+
+          setItems((prev) =>
+            prev.map((item) =>
+              item.id === itemId
+                ? { ...item, base64: progress.base64, imageUrl: progress.imageUrl }
+                : item,
+            ),
+          );
+          onDone?.();
+          return;
+        }
+
+        if (progress.status === "failed") {
+          setItems((prev) =>
+            prev.filter((item) => item.id !== itemId),
+          );
+          onDone?.();
+          return;
+        }
+      }
+    }
+  } catch {
+    // Stream interrupted
+  }
+}
+
 /** Start simulated progress for a video generation */
 function startSimulatedProgress(
   itemId: string,

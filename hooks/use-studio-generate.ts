@@ -5,7 +5,7 @@ import type { GeneratedItem, AspectRatio, GenerationMode } from "@/lib/types";
 import type { ExploreSelectionType, GenerationSelectionType } from "@/components/studio/types";
 import type { InFlightEntry } from "@/hooks/use-video-progress";
 import { upload } from "@vercel/blob/client";
-import { consumeVideoStream } from "@/hooks/use-video-progress";
+import { consumeVideoStream, consumeImageStream } from "@/hooks/use-video-progress";
 
 async function uploadBlobVideo(blobUrl: string): Promise<string> {
   const res = await fetch(blobUrl);
@@ -130,7 +130,7 @@ export function useStudioGenerate(params: UseStudioGenerateParams) {
       setProgressMap((prev) => new Map(prev).set(itemId, 0));
 
       try {
-        const response = await fetch("/api/generate-image", {
+        const startRes = await fetch("/api/generate-image", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -142,43 +142,48 @@ export function useStudioGenerate(params: UseStudioGenerateParams) {
           signal: abort.signal,
         });
 
-        if (!response.ok) {
-          const data = await response.json();
+        if (!startRes.ok) {
+          const data = await startRes.json();
           throw new Error(data.error || "Generation failed");
         }
 
-        const data = await response.json();
-
-        // Pre-decode image so it paints instantly when React renders
-        const preloadSrc = data.imageUrl || `data:image/png;base64,${data.image}`;
-        await new Promise<void>((resolve) => {
-          const preloadImg = new window.Image();
-          const done = () => { preloadImg.onload = null; preloadImg.onerror = null; resolve(); };
-          preloadImg.onload = done;
-          preloadImg.onerror = done;
-          preloadImg.src = preloadSrc;
-          setTimeout(done, 3000);
-        });
+        const { runId } = await startRes.json();
+        if (!runId) throw new Error("No runId returned");
 
         setItems((prev) =>
           prev.map((item) =>
-            item.id === itemId
-              ? { ...item, base64: data.image, imageUrl: data.imageUrl }
-              : item,
+            item.id === itemId ? { ...item, runId } : item,
           ),
         );
 
-        clearInterval(interval);
-        inFlightRef.current.delete(itemId);
-        setActiveGenerations((n) => Math.max(0, n - 1));
-        setProgressMap((prev) => new Map(prev).set(itemId, 100));
-        setTimeout(() => {
-          setProgressMap((prev) => {
-            const next = new Map(prev);
-            next.delete(itemId);
-            return next;
-          });
-        }, 500);
+        const streamRes = await fetch(`/api/generate-image/${runId}`, {
+          signal: abort.signal,
+        });
+        if (!streamRes.ok) {
+          throw new Error("Failed to connect to image stream");
+        }
+
+        consumeImageStream(
+          streamRes,
+          itemId,
+          setItems,
+          () => {
+            const entry = inFlightRef.current.get(itemId);
+            if (entry) {
+              clearInterval(entry.interval);
+              inFlightRef.current.delete(itemId);
+            }
+            setActiveGenerations((n) => Math.max(0, n - 1));
+            setProgressMap((prev) => new Map(prev).set(itemId, 100));
+            setTimeout(() => {
+              setProgressMap((prev) => {
+                const next = new Map(prev);
+                next.delete(itemId);
+                return next;
+              });
+            }, 500);
+          },
+        );
       } catch (err) {
         clearInterval(interval);
         inFlightRef.current.delete(itemId);

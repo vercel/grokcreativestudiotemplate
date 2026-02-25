@@ -16,6 +16,13 @@ export interface VideoProgress {
   error?: string;
 }
 
+export interface ImageProgress {
+  status: "pending" | "in_progress" | "completed" | "failed";
+  base64?: string;
+  imageUrl?: string;
+  error?: string;
+}
+
 export interface GeneratedItem {
   id: string;
   mode: GenerationMode;
