@@ -19,7 +19,6 @@ interface PromptInputProps {
   duration: 5 | 10;
   onDurationChange: (d: 5 | 10) => void;
   variant?: "inline" | "stacked";
-  generationDisabled?: boolean;
 }
 
 export function PromptInput({
@@ -37,7 +36,6 @@ export function PromptInput({
   duration,
   onDurationChange,
   variant = "inline",
-  generationDisabled = false,
 }: PromptInputProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -319,10 +317,9 @@ export function PromptInput({
     <button
       type="button"
       onClick={onSubmit}
-      disabled={!value.trim() || generationDisabled}
+      disabled={!value.trim()}
       className="flex shrink-0 items-center self-stretch bg-foreground px-5 font-pixel text-[10px] uppercase text-background transition-colors hover:bg-foreground/80 disabled:bg-muted disabled:text-muted-foreground/20 focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-1"
       aria-label={`Generate ${mode}`}
-      title={generationDisabled ? "Generation disabled — AI_GATEWAY_API_KEY not set" : undefined}
     >
       {attachment || videoAttachment ? "Edit" : "Generate"}
     </button>

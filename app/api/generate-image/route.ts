@@ -3,13 +3,6 @@ import { generateImageWorkflow } from "@/workflows/generate-image";
 import { isValidRatio, MAX_PROMPT_LENGTH } from "@/lib/constants";
 
 export async function POST(request: Request) {
-  if (!process.env.AI_GATEWAY_API_KEY) {
-    return Response.json(
-      { error: "AI_GATEWAY_API_KEY is not configured. Generation is disabled." },
-      { status: 503 },
-    );
-  }
-
   try {
     const { prompt, aspectRatio, imageBase64, id } = await request.json();
 
