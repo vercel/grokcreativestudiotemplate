@@ -7,6 +7,13 @@ import { detectMimeFromBase64 } from "@/lib/utils";
 const hasBlob = !!process.env.BLOB_READ_WRITE_TOKEN;
 
 export async function POST(request: Request) {
+  if (!process.env.AI_GATEWAY_API_KEY) {
+    return Response.json(
+      { error: "AI_GATEWAY_API_KEY is not configured. Generation is disabled." },
+      { status: 503 },
+    );
+  }
+
   try {
     const { prompt, aspectRatio, id, videoUrl, imageBase64, duration } = await request.json();
 
