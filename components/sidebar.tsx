@@ -309,7 +309,7 @@ export function Sidebar({ items, dbHistory, isHistoryLoading, historyTotalCount,
         )}
       </div>
 
-      <div className="flex items-center justify-end px-4 py-3">
+      <div className="flex items-center justify-center px-4 py-3">
         <button
           type="button"
           onClick={() => setShowHowItWorks(true)}
