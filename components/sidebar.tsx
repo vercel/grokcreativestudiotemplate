@@ -309,15 +309,7 @@ export function Sidebar({ items, dbHistory, isHistoryLoading, historyTotalCount,
         )}
       </div>
 
-      <div className="flex items-center justify-between px-4 py-3">
-        <a
-          href="https://github.com/vercel/grokcreativestudiotemplate/issues"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="font-pixel text-xs text-muted-foreground transition-colors hover:text-foreground"
-        >
-          Feedback?
-        </a>
+      <div className="flex items-center justify-end px-4 py-3">
         <button
           type="button"
           onClick={() => setShowHowItWorks(true)}
